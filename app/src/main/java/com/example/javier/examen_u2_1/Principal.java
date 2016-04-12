@@ -23,6 +23,10 @@ public class Principal extends AppCompatActivity implements Button.OnClickListen
     private EditText edtTxtA, edtTxtB, edtTxtC, edtTxtX1, edtTxtX2;
     private Button btnResolver;
     private CalendarView miCalendario;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor edit;
+    private static final String A="A", B="B", C="C";
+    public static final int PRIVADO = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +34,16 @@ public class Principal extends AppCompatActivity implements Button.OnClickListen
         setContentView(R.layout.activity_principal);
 
         edtTxtA = (EditText) findViewById(R.id.edtTxtA);
-
-
         edtTxtB = (EditText) findViewById(R.id.edtTxtB);
         edtTxtC = (EditText) findViewById(R.id.edtTxtC);
         edtTxtX1 = (EditText) findViewById(R.id.edtTxtX1);
         edtTxtX2 = (EditText) findViewById(R.id.edtTxtX2);
         btnResolver = (Button) findViewById(R.id.btnResolver);
         miCalendario = (CalendarView) findViewById(R.id.miCalendario);
+
+        pref = getPreferences(PRIVADO);
+        edit = pref.edit();
+        cargarPreferencias();
 
         btnResolver.setOnClickListener(this);
         miCalendario.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
@@ -52,6 +58,7 @@ public class Principal extends AppCompatActivity implements Button.OnClickListen
     @Override
     protected void onStop() {
         super.onStop();
+        guardarPreferencias();
     }
 
     @Override
@@ -93,6 +100,22 @@ public class Principal extends AppCompatActivity implements Button.OnClickListen
                 }
             }
         }
+    }
+
+    public void guardarPreferencias() {
+        edit.putFloat("A", Float.parseFloat(edtTxtA.getText()
+                .toString()));
+        edit.putFloat("B", Float.parseFloat(edtTxtB.getText()
+                .toString()));
+        edit.putFloat("C", Float.parseFloat(edtTxtC.getText()
+                .toString()));
+        edit.commit();
+    }
+
+    public void cargarPreferencias() {
+        edtTxtA.setText(""+pref.getFloat("A", 2f));
+        edtTxtB.setText(""+pref.getFloat("B",5f));
+        edtTxtC.setText(""+pref.getFloat("C", 1f));
     }
 
     @Override
